@@ -17,3 +17,46 @@
     <div class="right-button"> > </div>
   </div>
 */
+
+class Carousel {
+  constructor(items) {
+    this._index = 0;
+    this._items = items;
+  }
+
+  get index() {
+    return this._index;
+  }
+
+  set index(value) {
+    this._index = value;
+    for (const img of this.imgs.children) img.style.display = "none";
+
+    const index = value >= 0 ? value % this.imgs.children.length : Math.abs(this.imgs.children.length + value % this.imgs.children.length) % 4;
+
+    this.imgs.children[index].style.display = "initial";
+  }
+
+  dom() {
+    const carousel = createNode("div", {classes: ["carousel"]});
+
+    const left = createNode("div", {classes: ["left-button"]});
+    left.addEventListener("click", () => this.index -= 1);
+    carousel.appendChild(left);
+
+    this.imgs = createNode("div");
+    for (const item of this._items) this.imgs.appendChild(createNode("img", {src: item}));
+    carousel.appendChild(this.imgs);
+
+    const right = createNode("div", {classes: ["right-button"]});
+    right.addEventListener("click", () => this.index += 1);
+    carousel.appendChild(right);
+
+    this.index = 0;
+    return carousel;
+  }
+}
+
+const carousel = new Carousel(["./assets/carousel/mountains.jpeg", "./assets/carousel/computer.jpeg", "./assets/carousel/trees.jpeg", "./assets/carousel/turntable.jpeg"]);
+
+document.querySelector(".carousel-container").appendChild(carousel.dom());
