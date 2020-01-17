@@ -17,3 +17,24 @@
 // </div>
 //
 // Create a card for each of the articles and add the card to the DOM.
+
+const cards = document.querySelector(".cards-container");
+
+axios.get("https://lambda-times-backend.herokuapp.com/articles")
+  .then(response => {
+    for (const article of Object.values(response.data.articles)) for (const topic of article) cards.appendChild(Card(topic));
+  });
+
+function Card({headline, authorPhoto, authorName}) {
+  const node = createNode("div", {classes: ["card"]});
+  node.appendChild(createNode("div", {classes: ["headline"], textContent: headline}));
+
+  const author = createNode("div", {classes: ["author"]});
+  const img = createNode("div", {classes: ["img-container"]});
+  img.appendChild(createNode("img", {src: authorPhoto}));
+  author.appendChild(img);
+  author.appendChild(createNode("span", {textContent: `By ${authorName}`}));
+  node.appendChild(author);
+
+  return node;
+}
